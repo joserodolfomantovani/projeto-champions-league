@@ -1,6 +1,13 @@
 import { Request, Response } from 'express';
-import { createPlayerService, deletePlayerService, getPlayerByIdService, getPlayerService } from '../services/players-services';
+import {
+    createPlayerService,
+    deletePlayerService,
+    getPlayerByIdService,
+    getPlayerService,
+    updatePlayerService
+} from '../services/players-services';
 import { badRequest, noContent } from '../utils/http-helper';
+import { StatisticsModel } from '../models/statistics-model';
 
 export const getPlayerAll = async (req: Request, res: Response) => {
     const httpResponse = await getPlayerService();
@@ -8,29 +15,38 @@ export const getPlayerAll = async (req: Request, res: Response) => {
 }
 
 export const getPlayerById = async (req: Request, res: Response) => {
-    const  id = parseInt(req.params.id);
+    const id = parseInt(req.params.id);
     const httpResponse = await getPlayerByIdService(id);
     return res.status(httpResponse.statusCode).json(httpResponse.body);
 }
 
 export const postPlayer = async (req: Request, res: Response) => {
-   
-  const bodyValue = req.body;
 
-  const httpResponse = await createPlayerService(bodyValue)
+    const bodyValue = req.body;
 
-  if(httpResponse){
-res.status(httpResponse?.statusCode).json(httpResponse?.body)
-  }else{
-    const response = await badRequest()
-    res.status(response.statusCode).json(response.body)
-  }
+    const httpResponse = await createPlayerService(bodyValue)
+
+    if (httpResponse) {
+        res.status(httpResponse?.statusCode).json(httpResponse?.body)
+    } else {
+        const response = await badRequest()
+        res.status(response.statusCode).json(response.body)
+    }
 
 }
 
 export const deletePlayer = async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id);
+    const id = parseInt(req.params.id);
 
-  const httpResponse = await deletePlayerService(id)
+    const httpResponse = await deletePlayerService(id)
+    return res.status(httpResponse.statusCode).json(httpResponse.body)
+}
+
+export const updatePlayer = async (req: Request, res: Response) => {
+const id = parseInt(req.params.id);
+const bodyValue : StatisticsModel=  req.body;
+
+const httpResponse = await updatePlayerService(id, bodyValue)
 return res.status(httpResponse.statusCode).json(httpResponse.body)
+
 }
