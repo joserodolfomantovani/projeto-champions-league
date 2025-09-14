@@ -1,4 +1,3 @@
-import express,{Request, Response}from 'express';
 import createApp from './app';
 import router from './routes';
 
